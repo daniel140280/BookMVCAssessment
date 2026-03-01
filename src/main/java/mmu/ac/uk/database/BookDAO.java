@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import mmu.ac.uk.models.*;
 
@@ -119,8 +120,8 @@ public class BookDAO {
    public int insertBook(Book b) throws SQLException {
 	   openConnection();
 	   
-	   String sql = "INSERT INTO books (title, author, date, genres, characters, synopsis, cover) "
-               + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+	   String sql = "INSERT INTO books (title, author, date, genres, characters, synopsis) "
+               + "VALUES (?, ?, ?, ?, ?, ?)";
 
 	    PreparedStatement ps = conn.prepareStatement(sql);
 	    ps.setString(1, b.getTitle());
@@ -264,5 +265,102 @@ public class BookDAO {
        return results;
    }
 
+   /**
+    * Retrieves a paginated subset of books from the database for the BooksController.
+    *
+    * @param offset the starting row index (e.g., (page - 1) * limit)
+    * @param limits the max number of books per page
+    * @return a List of Book objects for required page
+    */
+   public List<Book> getBooks(int offset, int limit) {
+	    List<Book> list = new ArrayList<>();
+	    openConnection();
+
+	    String sql = "SELECT * FROM books LIMIT ? OFFSET ?";
+
+	    try {
+	        PreparedStatement ps = conn.prepareStatement(sql);
+	        ps.setInt(1, limit);
+	        ps.setInt(2, offset);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            list.add(getNextBook(rs));
+	        }
+
+	        ps.close();
+	        closeConnection();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return list;
+	}
+
+   /**
+    * Counts total number of books stored in the database - used to support pagination in the BooksController.
+    *
+    * @return the total number of book records
+    */
+
+	public int getBookCount() {
+	    openConnection();
+	    int count = 0;
+
+	    try {
+	        ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM books");
+	        if (rs.next()) count = rs.getInt(1);
+	        rs.close();
+	        closeConnection();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return count;
+	}
+	
+	/**
+     * Validates a Book object before insert/update based on the database requirements.
+     *
+     * @param b the Book to validate
+     * @param requireId whether the ID must be checked (true for update)
+     */
+    private void validateBook(Book b, boolean requireId) {
+
+        if (requireId && b.getId() <= 0)
+            throw new IllegalArgumentException("Book ID must be a positive integer.");
+
+        if (b.getTitle() == null || b.getTitle().trim().isEmpty())
+            throw new IllegalArgumentException("Title cannot be empty.");
+
+        if (b.getAuthor() == null || b.getAuthor().trim().isEmpty())
+            throw new IllegalArgumentException("Author cannot be empty.");
+
+        if (b.getDate() == null || b.getDate().trim().isEmpty())
+            throw new IllegalArgumentException("Date cannot be empty.");
+
+        if (!b.getDate().matches("\\d{4}-\\d{2}-\\d{2}"))
+            throw new IllegalArgumentException("Date must follow YYYY-MM-DD format.");
+
+        if (b.getGenres() == null || b.getGenres().trim().isEmpty())
+            throw new IllegalArgumentException("Genres cannot be empty.");
+
+        if (b.getCharacters() == null || b.getCharacters().trim().isEmpty())
+            throw new IllegalArgumentException("Characters cannot be empty.");
+
+        if (b.getSynopsis() == null || b.getSynopsis().trim().isEmpty())
+            throw new IllegalArgumentException("Synopsis cannot be empty.");
+
+        if (b.getTitle().length() > 255)
+            throw new IllegalArgumentException("Title exceeds 255 characters.");
+
+        if (b.getAuthor().length() > 255)
+            throw new IllegalArgumentException("Author exceeds 255 characters.");
+
+        if (b.getGenres().length() > 255)
+            throw new IllegalArgumentException("Genres exceed 255 characters.");
+    }
    
 }

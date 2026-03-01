@@ -44,6 +44,7 @@ public class AddBookController extends HttpServlet {
             dao.insertBook(b);
             //Once inserted, re-direct to GET BookController (main listing page) to refresh with new book
             resp.sendRedirect("books");
+            return;
         } catch (SQLException e) {
             req.setAttribute("error", e.getMessage());
             RequestDispatcher rd = req.getRequestDispatcher("addBook.jsp");

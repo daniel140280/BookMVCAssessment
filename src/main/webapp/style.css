@@ -1,0 +1,190 @@
+/* ============================
+   GLOBAL PAGE LAYOUT
+============================ */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #eef2f7;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: #2c3e50;
+}
+
+.container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+/* ============================
+   HEADERS
+============================ */
+h1 {
+    font-size: 2.4rem;
+    margin-bottom: 25px;
+    color: #2c3e50;
+}
+
+h2 {
+    margin-bottom: 15px;
+    color: #34495e;
+}
+
+/* ============================
+   CARD CONTAINERS
+============================ */
+.card {
+    background: #ffffff;
+    padding: 25px;
+    margin-bottom: 35px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    text-align: left;
+}
+
+.card.highlight {
+    border-left: 6px solid #3498db;
+}
+
+/* ============================
+   BUTTONS
+============================ */
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #217dbb;
+}
+
+.btn-secondary {
+    background: #bdc3c7;
+    color: #2c3e50;
+}
+
+.btn-secondary:hover {
+    background: #aeb6bf;
+}
+
+.btn-danger {
+    background: #c0392b;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #992d22;
+}
+
+/* ============================
+   FORM ELEMENTS
+============================ */
+input[type="text"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fdfdfd;
+    font-size: 1rem;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* ============================
+   TABLE STYLING
+============================ */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.styled-table th {
+    background: #3498db;
+    color: white;
+    padding: 14px;
+    font-size: 1rem;
+    border-right: 3px solid #ffffff;
+}
+
+.styled-table th:last-child {
+    border-right: none;
+}
+
+.styled-table td {
+    padding: 14px;
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.styled-table tr:hover td {
+    background: #f5f9ff;
+}
+
+/* ============================
+   ACTION ICONS
+============================ */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.icon {
+    font-size: 20px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #f0f0f0;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+}
+
+.icon.edit { color: #2980b9; }
+.icon.delete { color: #c0392b; }
+
+.icon:hover {
+    background: #e0e0e0;
+}
+
+/* ============================
+   PAGINATION
+============================ */
+.pagination {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.page-number,
+.page-btn {
+    padding: 8px 14px;
+    margin: 0 4px;
+    border-radius: 6px;
+    background: #d6dce5;
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.page-number.active {
+    background: #3498db;
+    color: white;
+}

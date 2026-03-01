@@ -21,18 +21,26 @@ public class BooksController extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     	
-    	BookDAO dao = new BookDAO();
-    	
-    	//Retrieve all books in an array list
-        List<Book> books = dao.getAllBooks();
-        
-		//Add the list to request scope - give key identifier for the value pairs
-        req.setAttribute("books", books);
+    	 int page = 1;
+         int recordsPerPage = 50;
 
-		//As using multiple JSP, always use the correct dispatch location
-        RequestDispatcher rd = req.getRequestDispatcher("books.jsp");
-        rd.include(req, resp);
-    }
+         if (req.getParameter("page") != null) {
+             page = Integer.parseInt(req.getParameter("page"));
+         }
+
+         BookDAO dao = new BookDAO();
+
+         List<Book> books = dao.getBooks((page - 1) * recordsPerPage, recordsPerPage);
+         int totalRecords = dao.getBookCount();
+         int totalPages = (int) Math.ceil(totalRecords * 1.0 / recordsPerPage);
+
+         req.setAttribute("books", books);
+         req.setAttribute("page", page);
+         req.setAttribute("totalPages", totalPages);
+
+         RequestDispatcher rd = req.getRequestDispatcher("books.jsp");
+         rd.forward(req, resp);
+     }
     
     @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -40,3 +48,25 @@ public class BooksController extends HttpServlet{
 	}
 
 }
+
+
+//@Override
+//protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//	
+//	BookDAO dao = new BookDAO();
+//	
+//	//Retrieve all books in an array list
+//    List<Book> books = dao.getAllBooks();
+//    
+//	//Add the list to request scope - give key identifier for the value pairs
+//    req.setAttribute("books", books);
+//
+//	//As using multiple JSP, always use the correct dispatch location
+//    RequestDispatcher rd = req.getRequestDispatcher("books.jsp");
+//    rd.include(req, resp);
+//}
+//
+//@Override
+//protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//
+//}
