@@ -167,6 +167,40 @@ public class BookDAO {
 
        return rows;
    }
+   
+   public Book getBookById(int id) {
+	    Book book = null;
+	    openConnection();
+
+	    String sql = "SELECT * FROM books WHERE id = ?";
+
+	    try {
+	        PreparedStatement ps = conn.prepareStatement(sql);
+	        ps.setInt(1, id);
+
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) {
+	            book = new Book(
+	                rs.getInt("id"),
+	                rs.getString("title"),
+	                rs.getString("author"),
+	                rs.getString("date"),
+	                rs.getString("genres"),
+	                rs.getString("characters"),
+	                rs.getString("synopsis")
+	            );
+	        }
+
+	        ps.close();
+	        closeConnection();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return book;
+	}
+
 
    /**
     * Deletes a Book from the database.

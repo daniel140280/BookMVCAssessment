@@ -1,5 +1,6 @@
 package mmu.ac.uk.controllers;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import mmu.ac.uk.database.BookDAO;
 import mmu.ac.uk.models.Book;
 
 
@@ -17,12 +19,17 @@ public class BooksController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        List<Book> books = service.getAllBooks();
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	
+    	BookDAO dao = new BookDAO();
+    	
+    	//Retrieve all books in an array list
+        List<Book> books = dao.getAllBooks();
+        
+		//Add the list to request scope - give key identifier for the value pairs
         req.setAttribute("books", books);
 
+		//As using multiple JSP, always use the correct dispatch location
         RequestDispatcher rd = req.getRequestDispatcher("books.jsp");
         rd.include(req, resp);
     }
