@@ -207,23 +207,29 @@ public class BookDAO {
     * Deletes a Book from the database.
     *
     * @param b the Book object to delete (uses the book ID).
-    * @return number of rows affected.
+    * @return number of rows affected. Key: (1 = deleted, 0 = not found).
     * @throws SQLException If a database error occurs.
     */
    public int deleteBook(Book b) throws SQLException {
-	   openConnection();
+	   
+	   try {
+		   openConnection();
 
-       String sql = "DELETE FROM books WHERE id=?";
+	       String sql = "DELETE FROM books WHERE id=?";
 
-       PreparedStatement ps = conn.prepareStatement(sql);
-       ps.setInt(1, b.getId());
+	       PreparedStatement ps = conn.prepareStatement(sql);
+	       ps.setInt(1, b.getId());
 
-       int rows = ps.executeUpdate();
+	       int rows = ps.executeUpdate();
 
-       ps.close();
-       closeConnection();
+	       ps.close();
+	       closeConnection();
 
-       return rows;
+	       return rows;
+	   } catch (SQLException e) {
+	        throw new SQLException("Book Not Deleted");
+	   }
+	   
    }
    
    /**
