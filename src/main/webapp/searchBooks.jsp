@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Search Results</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./stylesBooks.css">
 </head>
 
 <body>
@@ -13,7 +13,7 @@
 
     <h1>Search Results</h1>
 
-    <div class="card highlight">
+    <div class="card">
 
         <c:choose>
             <c:when test="${empty results}">
@@ -21,7 +21,7 @@
             </c:when>
 
             <c:otherwise>
-                <table class="styled-table">
+                <table class="styled-table book-table">
                     <tr>
                         <th>ID</th>
                         <th>Title</th>
@@ -53,6 +53,34 @@
     </div>
 
     <a href="books" class="btn-secondary">Back to Catalogue</a>
+    
+    <!-- ============================
+     PAGINATION CONTROLS
+============================= -->
+<div class="pagination">
+
+    <span>Page ${page} of ${totalPages}</span>
+
+    <!-- Previous -->
+    <c:if test="${page > 1}">
+        <a href="searchBooks?q=${query}&page=1" class="page-btn">First</a>
+        <a href="searchBooks?q=${query}&page=${page - 1}" class="page-btn">Previous</a>
+    </c:if>
+
+    <!-- Numbered pages -->
+    <c:forEach begin="1" end="${totalPages}" var="p">
+        <a href="searchBooks?q=${query}&page=${p}" class="page-number ${p == page ? 'active' : ''}">
+            ${p}
+        </a>
+    </c:forEach>
+
+    <!-- Next -->
+    <c:if test="${page < totalPages}">
+        <a href="searchBooks?q=${query}&page=${page + 1}" class="page-btn">Next</a>
+        <a href="searchBooks?q=${query}&page=${totalPages}" class="page-btn">Last</a>
+    </c:if>
+
+</div>
 
 </div>
 </body>

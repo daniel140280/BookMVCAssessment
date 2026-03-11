@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import mmu.ac.uk.helpers.BookSanitiser;
+import mmu.ac.uk.helpers.DateHelper;
 import mmu.ac.uk.models.*;
 
 
@@ -64,13 +66,12 @@ public class BookDAO {
      */
 	private Book getNextBook(ResultSet rs){
     	Book thisBook=null;
-		try {
-			
+		try {			
 			thisBook = new Book(
 					rs.getInt("id"),
 					rs.getString("title"),
 					rs.getString("author"),
-					rs.getString("date"),
+					DateHelper.normalise(rs.getString("date")),
 					rs.getString("genres"),
 					rs.getString("characters"),
 					rs.getString("synopsis"));
@@ -122,6 +123,9 @@ public class BookDAO {
 	   
 	   String sql = "INSERT INTO books (title, author, date, genres, characters, synopsis) "
                + "VALUES (?, ?, ?, ?, ?, ?)";
+	   
+	   // Ensuring a consistent date format is used for the Book objects 
+	   b = BookSanitiser.sanitise(b);
 
 	    PreparedStatement ps = conn.prepareStatement(sql);
 	    ps.setString(1, b.getTitle());
@@ -147,6 +151,10 @@ public class BookDAO {
     * @throws SQLException If a database error occurs.
     */
    public int updateBook(Book b) throws SQLException {
+	   
+	   // Ensuring a consistent date format is used for the Book objects 
+	   b = BookSanitiser.sanitise(b);
+	   
 	   openConnection();
 
        String sql = "UPDATE books SET title=?, author=?, date=?, genres=?, characters=?, synopsis=? "
@@ -169,6 +177,13 @@ public class BookDAO {
        return rows;
    }
    
+   /**
+    * Retrieves all data held for a single Book from the database using its unique id.
+    *
+    * @param id - unique id of the book to retrieve
+    * @return - Book object that matches the id
+    */
+  
    public Book getBookById(int id) {
 	    Book book = null;
 	    openConnection();
@@ -232,28 +247,70 @@ public class BookDAO {
 	   
    }
    
+//   /**
+//    * Searches for books where the title, author, or genres contain the given search string.
+//    *
+//    * @param search The text to search for.
+//    * @return A collection of matching Book objects.
+//    */
+//   public Collection<Book> searchBook(String search) {
+//       ArrayList<Book> results = new ArrayList<>();
+//       openConnection();
+//
+//       String sql = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR genres LIKE ? OR date LIKE ? OR characters LIKE ? OR id ? ";
+//
+//       try {
+//           PreparedStatement ps = conn.prepareStatement(sql);
+//           String wildcard = "%" + search + "%";
+//
+//           ps.setString(1, wildcard);
+//           ps.setString(2, wildcard);
+//           ps.setString(3, wildcard);
+//           ps.setString(4, wildcard);
+//           ps.setString(5, wildcard);
+//           ps.setString(6, wildcard);
+//
+//           ResultSet rs = ps.executeQuery();
+//
+//           while (rs.next()) {
+//               results.add(getNextBook(rs));
+//           }
+//
+//           ps.close();
+//           closeConnection();
+//
+//       } catch (SQLException e) {
+//           e.printStackTrace();
+//       }
+//
+//       return results;
+//   }
+   
+   
    /**
-    * Searches for books where the title, author, or genres contain the given search string.
+    * Performs a paginated search across title, year and genres.
+    * The year is extracted from the normalised date format before being returned.
     *
-    * @param searchStr The text to search for.
-    * @return A collection of matching Book objects.
+    * @param search - user search query
+    * @param offset - starting row index for pagination
+    * @param limit - maximum number of results to return
+    * @return List of Book objects that match the users search criteria
     */
-   public Collection<Book> searchBook(String searchStr) {
-       ArrayList<Book> results = new ArrayList<>();
+   public List<Book> searchBooksPaginated(String search, int offset, int limit) {
+       List<Book> results = new ArrayList<>();
        openConnection();
 
-       String sql = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR genres LIKE ? OR date LIKE ? OR characters LIKE ? OR id ? ";
+       String sql = "SELECT * FROM books WHERE title LIKE ? OR genres LIKE ? OR RIGHT(date, 4) LIKE ? LIMIT ? OFFSET ?";
 
        try {
            PreparedStatement ps = conn.prepareStatement(sql);
-           String wildcard = "%" + searchStr + "%";
+           String wildcard = "%" + search + "%";
 
            ps.setString(1, wildcard);
            ps.setString(2, wildcard);
            ps.setString(3, wildcard);
-           ps.setString(4, wildcard);
-           ps.setString(5, wildcard);
-           ps.setString(6, wildcard);
+           ps.setInt(4, limit);
+           ps.setInt(5, offset);
 
            ResultSet rs = ps.executeQuery();
 
@@ -270,6 +327,40 @@ public class BookDAO {
 
        return results;
    }
+   
+   /**
+    * Counts the total number of books matching the search criteria, to aid number of paginated pages required.
+    *
+    * @param search - user search query
+    * @return total number of matching book records
+    */
+   public int getSearchCount(String search) {
+       openConnection();
+       int count = 0;
+
+       String sql = "SELECT COUNT(*) FROM books WHERE title LIKE ? OR genres LIKE ? OR RIGHT(date, 4) LIKE ?";
+
+       try {
+           PreparedStatement ps = conn.prepareStatement(sql);
+           String wildcard = "%" + search + "%";
+
+           ps.setString(1, wildcard);
+           ps.setString(2, wildcard);
+           ps.setString(3, wildcard);
+
+           ResultSet rs = ps.executeQuery();
+           if (rs.next()) count = rs.getInt(1);
+
+           ps.close();
+           closeConnection();
+
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+
+       return count;
+   }
+   
 
    /**
     * Retrieves a paginated subset of books from the database for the BooksController.

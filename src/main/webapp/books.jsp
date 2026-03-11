@@ -4,8 +4,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Books</title>
-    <link rel="stylesheet" href="stylesBooks.css">
+    <title>Books MVC</title>
+    <link rel="stylesheet" href="./stylesBooks.css">
 </head>
 <body>
 
@@ -27,10 +27,14 @@
 
 <h2>All Books</h2>
 
-<!-- Future search form (non-functional now) -->
+<!-- Search form -->
 <div class="search-bar">
-    <input type="text" placeholder="🔍 Search books... (coming soon)">
+    <form action="searchBooks" method="get">
+        <input type="text" name="q" placeholder="🔍 Search by title, genre, or year...">
+        <button class="btn-primary">Search</button>
+    </form>
 </div>
+
 
 <table class="styled-table book-table">
     <tr>
@@ -64,23 +68,26 @@
      PAGINATION CONTROLS
 ============================= -->
 <div class="pagination">
+    
+    <span>Page ${page} of ${totalPages}</span>
 
     <!-- Previous -->
     <c:if test="${page > 1}">
-        <a href="books?page=${page - 1}" class="page-btn">← Prev</a>
+        <a href="books?page=1" class="page-btn">First</a>
+        <a href="books?page=${page - 1}" class="page-btn">Previous</a>
     </c:if>
 
     <!-- Numbered pages -->
-    <c:forEach begin="1" end="${totalPages}" var="i">
-        <a href="books?page=${i}" 
-           class="page-number ${page == i ? 'active' : ''}">
-            ${i}
+    <c:forEach begin="1" end="${totalPages}" var="p">
+        <a href="books?page=${p}" class="page-number ${p == page ? 'active' : ''}">
+            ${p}
         </a>
     </c:forEach>
-
+    
     <!-- Next -->
     <c:if test="${page < totalPages}">
-        <a href="books?page=${page + 1}" class="page-btn">Next →</a>
+        <a href="books?page=${page + 1}" class="page-btn">Next</a>
+        <a href="books?page=${totalPages}" class="page-btn">Last</a>
     </c:if>
 
 </div>
