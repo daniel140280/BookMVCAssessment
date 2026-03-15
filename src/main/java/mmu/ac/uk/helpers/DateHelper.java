@@ -2,7 +2,10 @@ package mmu.ac.uk.helpers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.format.TextStyle;
+import java.time.temporal.ChronoField;
 import java.util.Locale;
 
 /**
@@ -19,39 +22,83 @@ import java.util.Locale;
  */
 public class DateHelper {
 	
-    private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private static final int PIVOT_YEAR = 1930;
+	
+  private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    // Two-digit year formats with correct pivot year (1930)
+    private static final DateTimeFormatter TWO_DIGIT_YEAR_US =
+            new DateTimeFormatterBuilder()
+                    .appendPattern("MM/dd/")
+                    .appendValueReduced(ChronoField.YEAR, 2, 2, PIVOT_YEAR)
+                    .toFormatter(Locale.ENGLISH);
+
+    private static final DateTimeFormatter TWO_DIGIT_YEAR_UK =
+            new DateTimeFormatterBuilder()
+                    .appendPattern("dd/MM/")
+                    .appendValueReduced(ChronoField.YEAR, 2, 2, PIVOT_YEAR)
+                    .toFormatter(Locale.ENGLISH);
+    
+    private static final DateTimeFormatter MONTH_SHORT_DASH_YY =
+            new DateTimeFormatterBuilder()
+		            .parseCaseInsensitive()
+		            .appendText(ChronoField.MONTH_OF_YEAR, TextStyle.SHORT)
+		            .appendLiteral('-')
+		            .appendValueReduced(ChronoField.YEAR, 2, 2, PIVOT_YEAR)
+		            .toFormatter(Locale.ENGLISH);
+
+    private static final DateTimeFormatter MONTH_SHORT_SPACE_YY =
+            new DateTimeFormatterBuilder()
+		            .parseCaseInsensitive()
+		            .appendText(ChronoField.MONTH_OF_YEAR, TextStyle.SHORT)
+		            .appendLiteral(' ')
+		            .appendValueReduced(ChronoField.YEAR, 2, 2, PIVOT_YEAR)
+		            .toFormatter(Locale.ENGLISH);
+
 
     private static final DateTimeFormatter[] INPUT_FORMATS = new DateTimeFormatter[]{
-    		DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+            // UK formats
+            DateTimeFormatter.ofPattern("dd/MM/yyyy"),
             DateTimeFormatter.ofPattern("d/M/yyyy"),
+            TWO_DIGIT_YEAR_UK,
+
+            // US formats
             DateTimeFormatter.ofPattern("MM/dd/yyyy"),
             DateTimeFormatter.ofPattern("M/d/yyyy"),
-            DateTimeFormatter.ofPattern("dd/MM/yy"),
-            DateTimeFormatter.ofPattern("MM/dd/yy"),
-            DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH),
-            DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH),
-            DateTimeFormatter.ofPattern("MMM-yyyy", Locale.ENGLISH),
-            DateTimeFormatter.ofPattern("MMMM-yyyy", Locale.ENGLISH),
-            DateTimeFormatter.ofPattern("MMM-yy", Locale.ENGLISH),
-            DateTimeFormatter.ofPattern("MMMM-yy", Locale.ENGLISH),
-            DateTimeFormatter.ofPattern("MMM yyyy", Locale.ENGLISH),
-            DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH),
+            TWO_DIGIT_YEAR_US,
+
+            // Month name formats
+            new DateTimeFormatterBuilder().parseCaseInsensitive()
+		            .appendPattern("d MMM yyyy").toFormatter(Locale.ENGLISH),
+		    new DateTimeFormatterBuilder().parseCaseInsensitive()
+		            .appendPattern("d MMMM yyyy").toFormatter(Locale.ENGLISH),
+		    new DateTimeFormatterBuilder().parseCaseInsensitive()
+		            .appendPattern("MMM yyyy").toFormatter(Locale.ENGLISH),
+		    new DateTimeFormatterBuilder().parseCaseInsensitive()
+		            .appendPattern("MMMM yyyy").toFormatter(Locale.ENGLISH),
+            MONTH_SHORT_DASH_YY,
+            MONTH_SHORT_SPACE_YY,
+
+            // Year only
             DateTimeFormatter.ofPattern("yyyy")
     };
 
+
     public static String normalise(String raw) {
-        if (raw == null) return null;
+        if (raw == null) {
+        	return null;
+        }
 
-        raw = raw.trim();
+        raw = raw.trim()
+                .replace('–', '-')
+                .replace('—', '-')
+                .replace('−', '-');
 
-        // Handle "Published" or similar noise
-        if (raw.equalsIgnoreCase("published") ||
-            raw.equalsIgnoreCase("date unknown") ||
-            raw.equalsIgnoreCase("unknown")) {
+        String upper = raw.toUpperCase(Locale.ENGLISH);
+        if (upper.equals("PUBLISHED") || upper.equals("UNKNOWN") || upper.equals("DATE UNKNOWN")) {
             return null;
         }
 
-        // Try all known formats
         for (DateTimeFormatter fmt : INPUT_FORMATS) {
             try {
                 LocalDate date = LocalDate.parse(raw, fmt);
@@ -59,35 +106,80 @@ public class DateHelper {
             } catch (DateTimeParseException ignored) {}
         }
 
-        // Handle year-only manually (e.g., "2011")
-        if (raw.matches("\\d{4}")) {
-            LocalDate date = LocalDate.of(Integer.parseInt(raw), 1, 1);
-            return date.format(OUTPUT_FORMAT);
-        }
+        return null;
 
-        // Handle month-year manually (e.g., "Aug-86")
-        try {
-            String[] parts = raw.split("[- ]");
-            if (parts.length == 2) {
-                String month = parts[0];
-                String year = parts[1];
-
-                int y = (year.length() == 2)
-                        ? (year.startsWith("0") || Integer.parseInt(year) > 30
-                            ? 1900 + Integer.parseInt(year)
-                            : 2000 + Integer.parseInt(year))
-                        : Integer.parseInt(year);
-
-                DateTimeFormatter monthFmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
-                int m = LocalDate.parse("01-" + month + "-" + y,
-                        DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ENGLISH)).getMonthValue();
-
-                LocalDate date = LocalDate.of(y, m, 1);
-                return date.format(OUTPUT_FORMAT);
-            }
-        } catch (Exception ignored) {}
-
-
-        return null; // Invalid date based on the criteria selected. The DAO will determine how it handles incorrect/weird formats.
     }
+
+	
+//    private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//
+//    private static final DateTimeFormatter[] INPUT_FORMATS = new DateTimeFormatter[]{
+//    		DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+//            DateTimeFormatter.ofPattern("d/M/yyyy"),
+//            DateTimeFormatter.ofPattern("MM/dd/yyyy"),
+//            DateTimeFormatter.ofPattern("M/d/yyyy"),
+//            DateTimeFormatter.ofPattern("dd/MM/yy"),
+//            DateTimeFormatter.ofPattern("MM/dd/yy"),
+//            DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH),
+//            DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH),
+//            DateTimeFormatter.ofPattern("MMM-yyyy", Locale.ENGLISH),
+//            DateTimeFormatter.ofPattern("MMMM-yyyy", Locale.ENGLISH),
+//            DateTimeFormatter.ofPattern("MMM-yy", Locale.ENGLISH),
+//            DateTimeFormatter.ofPattern("MMMM-yy", Locale.ENGLISH),
+//            DateTimeFormatter.ofPattern("MMM yyyy", Locale.ENGLISH),
+//            DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH),
+//            DateTimeFormatter.ofPattern("yyyy")
+//    };
+//
+//    public static String normalise(String raw) {
+//        if (raw == null) return null;
+//
+//        raw = raw.trim();
+//
+//        // Handle "Published" or similar noise
+//        if (raw.equalsIgnoreCase("published") ||
+//            raw.equalsIgnoreCase("date unknown") ||
+//            raw.equalsIgnoreCase("unknown")) {
+//            return null;
+//        }
+//
+//        // Try all known formats
+//        for (DateTimeFormatter fmt : INPUT_FORMATS) {
+//            try {
+//                LocalDate date = LocalDate.parse(raw, fmt);
+//                return date.format(OUTPUT_FORMAT);
+//            } catch (DateTimeParseException ignored) {}
+//        }
+//
+//        // Handle year-only manually (e.g., "2011")
+//        if (raw.matches("\\d{4}")) {
+//            LocalDate date = LocalDate.of(Integer.parseInt(raw), 1, 1);
+//            return date.format(OUTPUT_FORMAT);
+//        }
+//
+//        // Handle month-year manually (e.g., "Aug-86")
+//        try {
+//            String[] parts = raw.split("[- ]");
+//            if (parts.length == 2) {
+//                String month = parts[0];
+//                String year = parts[1];
+//
+//                int y = (year.length() == 2)
+//                        ? (year.startsWith("0") || Integer.parseInt(year) > 30
+//                            ? 1900 + Integer.parseInt(year)
+//                            : 2000 + Integer.parseInt(year))
+//                        : Integer.parseInt(year);
+//
+//                DateTimeFormatter monthFmt = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
+//                int m = LocalDate.parse("01-" + month + "-" + y,
+//                        DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ENGLISH)).getMonthValue();
+//
+//                LocalDate date = LocalDate.of(y, m, 1);
+//                return date.format(OUTPUT_FORMAT);
+//            }
+//        } catch (Exception ignored) {}
+//
+//
+//        return null; // Invalid date based on the criteria selected. The DAO will determine how it handles incorrect/weird formats.
+//    }
 }

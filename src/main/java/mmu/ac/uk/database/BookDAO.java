@@ -438,9 +438,9 @@ public class BookDAO {
         if (b.getDate() == null || b.getDate().trim().isEmpty())
             throw new IllegalArgumentException("Date cannot be empty.");
 
-        if (!b.getDate().matches("\\d{4}-\\d{2}-\\d{2}"))
-            throw new IllegalArgumentException("Date must follow YYYY-MM-DD format.");
-
+        if (!b.getDate().matches("\\d{2}/\\d{2}/\\d{4}"))
+            throw new IllegalArgumentException("Date must follow DD/MM/YYYY format.");
+        
         if (b.getGenres() == null || b.getGenres().trim().isEmpty())
             throw new IllegalArgumentException("Genres cannot be empty.");
 

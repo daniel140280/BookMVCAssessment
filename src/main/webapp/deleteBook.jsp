@@ -1,33 +1,33 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Delete Book</title>
-    <link rel="stylesheet" href="stylesBooks.css">
+    <link rel="stylesheet" href="./stylesBooks.css">
 </head>
-<body>
 
+<body>
 <div class="container">
 
-<h1>Confirm Delete</h1>
+<h1>Delete Book</h1>
 
 <div class="card warning">
 
-<p>Are you sure you want to remove:</p>
+    <h2>Last chance, are you sure you want to delete this book?</h2>
 
-<h3>${book.title}</h3>
-<p><strong>Author:</strong> ${book.author}</p>
+    <p><strong>${book.title}</strong> by ${book.author}</p>
 
-<form action="deleteBook" method="post">
-    <input type="hidden" name="id" value="${book.id}">
-    <button class="btn-danger">Delete</button>
-    <a href="books" class="btn-secondary">Cancel</a>
-</form>
+    <form action="deleteBook" method="post">
+        <input type="hidden" name="id" value="${book.id}">
 
-</div>
+        <button class="btn-danger" type="submit">Delete</button>
+        <a href="books" class="btn-secondary">Cancel</a>
+    </form>
 
 </div>
 
+</div>
 </body>
 </html>

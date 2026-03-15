@@ -1,53 +1,57 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Add Book</title>
-    <link rel="stylesheet" href="stylesBooks.css">
+    <link rel="stylesheet" href="./stylesBooks.css">
 </head>
-<body>
 
+<body>
 <div class="container">
 
 <h1>Add New Book</h1>
 
 <div class="card">
 
-<c:if test="${not empty error}">
-    <div class="error-box">${error}</div>
-</c:if>
+    <c:if test="${not empty error}">
+        <div class="error-box">${error}</div>
+    </c:if>
 
-<form action="addBook" method="post" class="form-grid">
+    <form action="addBook" method="post">
 
-    <label>Title:</label>
-    <input type="text" name="title" maxlength="255" required>
+        <div class="form-grid">
 
-    <label>Author:</label>
-    <input type="text" name="author" maxlength="255" required>
+            <label>Title:</label>
+            <input type="text" name="title" required>
 
-    <label>Publication Date:</label>
-    <input type="text" name="date" 
-           placeholder="YYYY-MM-DD"
-           pattern="\d{4}-\d{2}-\d{2}" required>
+            <label>Author:</label>
+            <input type="text" name="author" required>
 
-    <label>Genres (comma separated):</label>
-    <input type="text" name="genres" maxlength="255">
+            <label>Date (DD/MM/YYYY):</label>
+            <input type="text" name="date" required>
 
-    <label>Main Characters:</label>
-    <input type="text" name="characters">
+            <label>Genres:</label>
+            <input type="text" name="genres" required>
 
-    <label>Synopsis:</label>
-    <textarea name="synopsis"></textarea>
+            <label>Characters:</label>
+            <input type="text" name="characters" required>
 
-    <button class="btn-primary">Add Book</button>
-    <a href="books" class="btn-secondary">Cancel</a>
+            <label>Synopsis:</label>
+            <textarea name="synopsis" rows="5" required></textarea>
 
-</form>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button class="btn-primary" type="submit">Add Book</button>
+            <a href="books" class="btn-secondary">Cancel</a>
+        </div>
+
+    </form>
 
 </div>
 
 </div>
-
 </body>
 </html>

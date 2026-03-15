@@ -14,7 +14,16 @@
     <h1>Search Results</h1>
 
     <div class="card">
+    
+        <div class="header-row">
+        <h2>Results for "${query}"</h2>
 
+        <form action="searchBooks" method="get" class="search-bar">
+            <input type="text" name="q" value="${query}" placeholder="Search again...">
+            <button class="btn-primary">Search</button>
+        </form>
+    	</div>
+ 
         <c:choose>
             <c:when test="${empty results}">
                 <p>No books matched your search.</p>
@@ -34,16 +43,20 @@
 
                     <c:forEach var="b" items="${results}">
                         <tr>
-                            <td>${b.id}</td>
-                            <td>${b.title}</td>
-                            <td>${b.author}</td>
-                            <td>${b.date}</td>
-                            <td>${b.genres}</td>
-                            <td>${b.characters}</td>
-                            <td class="actions">
-                                <a class="icon edit" href="editBook?id=${b.id}">&#9998;</a>
-                                <a class="icon delete" href="deleteBook?id=${b.id}">&#128465;</a>
-                            </td>
+                            <td>
+                            <a href="viewBook?id=${b.id}" class="truncate">${b.id}</a>
+                        </td>
+                        <td>
+                            <a href="viewBook?id=${b.id}" class="truncate" title="${b.title}">${b.title}</a>
+                        </td>
+                        <td class="truncate" title="${b.author}">${b.author}</td>
+                        <td>${b.date == null ? "No Date Available" : b.date}</td>
+                        <td class="truncate" title="${b.genres}">${b.genres}</td>
+                        <td class="actions">
+                            <a class="icon edit" href="editBook?id=${b.id}">&#9998;</a>
+                            <a class="icon delete" href="deleteBook?id=${b.id}">&#128465;</a>
+                        </td>
+
                         </tr>
                     </c:forEach>
                 </table>
@@ -81,6 +94,8 @@
     </c:if>
 
 </div>
+
+<a href="books" class="btn-secondary">Back to Catalogue</a>
 
 </div>
 </body>

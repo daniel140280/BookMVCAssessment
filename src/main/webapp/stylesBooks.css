@@ -1,25 +1,28 @@
 /* GLOBAL */
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #f4f1ea; /* paper-like */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f1ea;
     margin: 0;
     padding: 0;
     text-align: center;
-    background-image: url('bookshelf-bg.jpg'); /* optional future image */
+    background-image: url('bookshelf-bg.jpg');
     background-size: cover;
     background-attachment: fixed;
 }
 
 .container {
-    width: 75%;
-    margin: 40px auto;
+    width: 95%; 
+    max-width: 1200px;
+    margin: 20px auto;
 }
 
 /* HEADERS */
 h1 {
     color: #4e342e;
-    margin-bottom: 25px;
+    margin-bottom: 12px;
+    margin-top: 12px;
     font-weight: 700;
+    font-size: 1.8rem;
 }
 
 h2 {
@@ -29,11 +32,12 @@ h2 {
 /* CARDS */
 .card {
     background: #ffffffee;
-    padding: 25px;
-    margin-bottom: 35px;
+    padding: 16px 20px; 
+    margin-bottom: 20px;
     border-radius: 12px;
     border-left: 6px solid #8d6e63;
     box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    overflow-x: auto; 
 }
 
 .card.warning {
@@ -48,6 +52,7 @@ h2 {
     border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
+    display: inline-block;
 }
 
 .btn-primary:hover {
@@ -82,7 +87,9 @@ h2 {
 .styled-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 16px;
+    table-layout: fixed; 
+    min-width: 600px;
 }
 
 .styled-table th {
@@ -90,6 +97,8 @@ h2 {
     color: white;
     padding: 12px;
     border-right: 3px solid #ffffff;
+    white-space: nowrap;
+    text-align: left;
 }
 
 .styled-table th:last-child {
@@ -97,23 +106,29 @@ h2 {
 }
 
 .styled-table td {
-    padding: 12px;
+    padding: 10px 12px;
     border-bottom: 1px solid #d7ccc8;
+    color: #3e2723;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.styled-table td.actions {
+    white-space: nowrap;
+    overflow: visible;
+    width: 90px;
 }
 
 /* ACTION ICONS */
-.actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
 .icon {
-    font-size: 20px;
-    padding: 8px 12px;
-    border-radius: 8px;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 4px;
     background: #efebe9;
-    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.2s;
 }
 
 .icon.edit {
@@ -126,6 +141,14 @@ h2 {
 
 .icon:hover {
     background: #d7ccc8;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%; 
 }
 
 /* FORM GRID */
@@ -147,11 +170,14 @@ h2 {
 .search-bar {
     text-align: right;
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .search-bar input {
     padding: 10px;
-    width: 250px;
+    width: 220px;
     border-radius: 8px;
     border: 1px solid #a1887f;
 }
@@ -159,32 +185,77 @@ h2 {
 /* ADD BOOK LINK */
 .add-book-link {
     text-align: right;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
-/* PAGINATION */
+/* ============================
+   PAGINATION 
+============================ */
 .pagination {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 6px;
-    margin-top: 25px;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    padding-bottom: 40px;
 }
 
-.page-number, .page-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.page-btn, .page-number {
+    padding: 8px 16px;
+    background: #ffffff; /* Button-like container */
+    border: 1px solid #d7ccc8;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #5d4037;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.page-status {
+    padding: 8px 16px;
+    background: #6d4c41;
+    color: white;
+    border-radius: 6px;
+    font-weight: 600;
 }
 
 .page-number.active {
-    background: #6d4c41;
+    background: #8d6e63;
     color: white;
+    border-color: #8d6e63;
 }
 
-.page-number:hover,
-.page-btn:hover {
-    background: #d7ccc8;
+.page-btn:hover, .page-number:hover:not(.active) {
+    background: #efebe9;
+}
+
+.truncate {
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: default;
+}
+
+.truncate-text {
+    display: inline-block;
+    max-width: 40ch; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+}
+
+.styled-table td.truncate,
+.styled-table td .truncate {
+    display: inline-block;
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
 }
 
 /* ERROR BOX */
@@ -194,4 +265,109 @@ h2 {
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 15px;
+}
+
+/* ============================
+   HEADER ROW
+============================ */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.header-row h2 {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    font-size: 1.4rem;
+    color: #5d4037;
+}
+
+/* ============================
+   VIEW BOOK PAGE
+============================ */
+.view-book-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 18px;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.view-book-label {
+    font-weight: bold;
+    color: #5d4037;
+}
+
+.view-book-value {
+    color: #3e2723;
+}
+
+.view-book-synopsis {
+    margin-top: 20px;
+    text-align: left;
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+@media (max-width: 900px) {
+    .container {
+        width: 96%;
+    }
+
+    .view-book-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .truncate,
+    .styled-table td.truncate,
+    .styled-table td .truncate {
+        max-width: 120px;
+    }
+}
+
+@media (max-width: 600px) {
+    .header-row {
+        flex-direction: column;
+		align-items: stretch;
+	}
+
+    .search-bar {
+        width: 100%;
+        margin-bottom: 10px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-bar input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .truncate,
+    .styled-table td.truncate,
+    .styled-table td .truncate {
+        max-width: 80px;
+    }
+
+    .book-table {
+        min-width: 520px;
+    }
+
+    .pagination {
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+
+    .page-btn,
+    .page-number,
+    .page-status {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
 }

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html>
@@ -25,16 +26,15 @@
 ============================= -->
 <div class="card">
 
-<h2>All Books</h2>
+<!-- Header row and Search form -->
+<div class="header-row">
+    <h2>All Books</h2>
 
-<!-- Search form -->
-<div class="search-bar">
-    <form action="searchBooks" method="get">
+    <form action="searchBooks" method="get" class="search-bar">
         <input type="text" name="q" placeholder="🔍 Search by title, genre, or year...">
         <button class="btn-primary">Search</button>
     </form>
 </div>
-
 
 <table class="styled-table book-table">
     <tr>
@@ -48,16 +48,22 @@
 
     <c:forEach var="b" items="${books}">
         <tr>
-            <td>${b.id}</td>
-            <td>${b.title}</td>
-            <td>${b.author}</td>
-            <td>${b.date}</td>
-            <td>${b.genres}</td>
-
-            <td class="actions">
-                <a class="icon edit" href="editBook?id=${b.id}" title="Edit">&#9998;</a>
-                <a class="icon delete" href="deleteBook?id=${b.id}" title="Delete">&#128465;</a>
-            </td>
+           <td>
+               <a href="viewBook?id=${b.id}" class="truncate" title="View details">${b.id}</a>
+           </td>
+           <td>
+               <a href="viewBook?id=${b.id}" class="truncate" title="${b.title}">${b.title}</a>
+           </td>
+			<td class="truncate" title="${b.author}">
+			    ${fn:length(b.author) > 64 ? fn:substring(b.author, 0, 64).concat('...') : b.author}
+			</td>           <td>${b.date == null ? "No Date Available" : b.date}</td>
+			<td class="truncate" title="${b.genres}">
+			    ${fn:length(b.genres) > 64 ? fn:substring(b.genres, 0, 64).concat('...') : b.genres}
+			</td>
+           <td class="actions">
+               <a class="icon edit" href="editBook?id=${b.id}" title="Edit">&#9998;</a>
+               <a class="icon delete" href="deleteBook?id=${b.id}" title="Delete">&#128465;</a>
+           </td>
         </tr>
     </c:forEach>
 </table>
@@ -68,28 +74,25 @@
      PAGINATION CONTROLS
 ============================= -->
 <div class="pagination">
-    
-    <span>Page ${page} of ${totalPages}</span>
+    <div class="page-status">Page ${page} of ${totalPages}</div>
 
-    <!-- Previous -->
     <c:if test="${page > 1}">
-        <a href="books?page=1" class="page-btn">First</a>
-        <a href="books?page=${page - 1}" class="page-btn">Previous</a>
+        <div class="pagination-nav">
+            <a href="books?page=1" class="page-btn">First</a>
+            <a href="books?page=${page - 1}" class="page-btn">Previous</a>
+        </div>
     </c:if>
 
-    <!-- Numbered pages -->
     <c:forEach begin="1" end="${totalPages}" var="p">
-        <a href="books?page=${p}" class="page-number ${p == page ? 'active' : ''}">
-            ${p}
-        </a>
+        <a href="books?page=${p}" class="page-number ${p == page ? 'active' : ''}">${p}</a>
     </c:forEach>
-    
-    <!-- Next -->
-    <c:if test="${page < totalPages}">
-        <a href="books?page=${page + 1}" class="page-btn">Next</a>
-        <a href="books?page=${totalPages}" class="page-btn">Last</a>
-    </c:if>
 
+    <c:if test="${page < totalPages}">
+        <div class="pagination-nav">
+            <a href="books?page=${page + 1}" class="page-btn">Next</a>
+            <a href="books?page=${totalPages}" class="page-btn">Last</a>
+        </div>
+    </c:if>
 </div>
 
 </div>
