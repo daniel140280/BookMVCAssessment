@@ -1,50 +1,62 @@
-/* GLOBAL */
+/* ============================================================
+   GLOBAL
+   ============================================================ */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f1ea;
+    /* background-image: url('../bookshelf-bg.jpg'); */
+    background: linear-gradient(145deg, #f4f1ea 0%, #e8e0d5 50%, #ede0d0 100%);
+    background-attachment: fixed;
     margin: 0;
     padding: 0;
     text-align: center;
-    background-image: url('bookshelf-bg.jpg');
-    background-size: cover;
-    background-attachment: fixed;
 }
 
+/* ============================================================
+   CONTAINER
+   ============================================================ */
 .container {
-    width: 95%; 
-    max-width: 1200px;
+    width: 95%;
+    max-width: 1400px;
     margin: 20px auto;
 }
 
-/* HEADERS */
+/* ============================================================
+   HEADINGS
+   ============================================================ */
 h1 {
     color: #4e342e;
-    margin-bottom: 12px;
-    margin-top: 12px;
-    font-weight: 700;
     font-size: 1.8rem;
+    font-weight: 700;
+    margin: 12px 0;
 }
 
 h2 {
     color: #5d4037;
+    font-size: 1.4rem;
+    margin: 0;
+    padding: 0;
 }
 
-/* CARDS */
+/* ============================================================
+   CARD
+   ============================================================ */
 .card {
     background: #ffffffee;
-    padding: 16px 20px; 
+    padding: 20px 24px;
     margin-bottom: 20px;
     border-radius: 12px;
     border-left: 6px solid #8d6e63;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    overflow-x: auto; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    text-align: left;
 }
 
 .card.warning {
     border-left-color: #c62828;
 }
 
-/* BUTTONS */
+/* ============================================================
+   BUTTONS
+   ============================================================ */
 .btn-primary {
     padding: 10px 20px;
     background: #6d4c41;
@@ -53,11 +65,11 @@ h2 {
     text-decoration: none;
     font-weight: 600;
     display: inline-block;
+    border: none;
+    cursor: pointer;
 }
 
-.btn-primary:hover {
-    background: #5d4037;
-}
+.btn-primary:hover { background: #5d4037; }
 
 .btn-secondary {
     padding: 10px 18px;
@@ -67,9 +79,7 @@ h2 {
     text-decoration: none;
 }
 
-.btn-secondary:hover {
-    background: #a1887f;
-}
+.btn-secondary:hover { background: #a1887f; }
 
 .btn-danger {
     padding: 10px 18px;
@@ -77,36 +87,79 @@ h2 {
     color: white;
     border-radius: 8px;
     border: none;
+    cursor: pointer;
 }
 
-.btn-danger:hover {
-    background: #b71c1c;
+.btn-danger:hover { background: #b71c1c; }
+
+/* ============================================================
+   ADD BOOK LINK
+   ============================================================ */
+.add-book-link {
+    text-align: right;
+    margin-bottom: 16px;
 }
 
-/* TABLE */
+/* ============================================================
+   HEADER ROW
+   ============================================================ */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+/* ============================================================
+   SEARCH BAR
+   ============================================================ */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-bar input {
+    padding: 9px 12px;
+    width: 240px;
+    border-radius: 8px;
+    border: 1px solid #a1887f;
+    font-size: 0.95rem;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
 .styled-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 16px;
-    table-layout: fixed; 
-    min-width: 600px;
+    margin-top: 4px;
+    table-layout: fixed;
 }
 
-.styled-table th {
+.styled-table thead th {
     background: #6d4c41;
     color: white;
-    padding: 12px;
-    border-right: 3px solid #ffffff;
-    white-space: nowrap;
+    padding: 12px 10px;
     text-align: left;
+    border-right: 2px solid #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-.styled-table th:last-child {
+/* CHANGED: actions header centred to match icon alignment below */
+.styled-table thead th.col-actions {
+  	text-align: center; 
+}
+
+.styled-table thead th:last-child {
     border-right: none;
 }
 
-.styled-table td {
-    padding: 10px 12px;
+.styled-table tbody td {
+    padding: 10px;
     border-bottom: 1px solid #d7ccc8;
     color: #3e2723;
     vertical-align: middle;
@@ -115,43 +168,174 @@ h2 {
     white-space: nowrap;
 }
 
-.styled-table td.actions {
-    white-space: nowrap;
+.styled-table tbody td.col-actions {
     overflow: visible;
-    width: 90px;
+    text-overflow: unset;
+    white-space: nowrap;
+    padding: 6px 8px;
 }
 
-/* ACTION ICONS */
+.styled-table tbody tr:nth-child(even) { background: #faf8f5; }
+.styled-table tbody tr:hover           { background: #f3ede8; }
+
+/* ============================================================
+   COLUMN WIDTHS
+   CHANGED: col-actions reduced from 11% to 7% — just wide
+   enough for two icons. Freed space redistributed to title,
+   author and genres for more readable text.
+   ============================================================ */
+.col-id      { width: 5%;  text-align: left; }
+.col-title   { width: 26%; }
+.col-author  { width: 19%; }
+.col-date    { width: 12%; white-space: nowrap; }
+.col-genres  { width: 20%; }  
+.col-actions { width: 9%;  text-align: center; box-sizing: border-box; }
+
+/* ============================================================
+   CELL TEXT TRUNCATION
+   ============================================================ */
+.cell-text {
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    cursor: default;
+}
+
+a.cell-text {
+    color: #5d4037;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a.cell-text:hover { text-decoration: underline; }
+
+/* ============================================================
+   ACTION ICONS
+   CHANGED: icons larger, centred in column, with stronger
+   colour backgrounds so edit is clearly visible alongside delete.
+   justify-content changed to center to match centred column header.
+   ============================================================ */
+.actions {
+	display: flex;
+    align-items: center;
+    justify-content: center;  
+    gap: 4px;                  
+    white-space: nowrap;
+    overflow: visible;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
 .icon {
     text-decoration: none;
-    padding: 6px 10px;
-    border-radius: 4px;
-    background: #efebe9;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
     font-size: 1.1rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.1s;
+    flex-shrink: 0; 
+}
+
+/* CHANGED: edit icon now has a warm tinted background so it's
+   clearly visible and distinct from delete */
+.icon.edit {
+    color: #ffffff;
+    background: #8d6e63;       /* CHANGED: was plain #efebe9, now filled brown */
+}
+
+.icon.edit:hover {
+    background: #6d4c41;       /* CHANGED: darker on hover */
+    transform: scale(1.1);     /* CHANGED: subtle grow on hover */
+}
+
+/* CHANGED: delete icon has a red filled background to match danger */
+.icon.delete {
+    color: #ffffff;
+    background: #c62828;       /* CHANGED: was plain #efebe9, now filled red */
+}
+
+.icon.delete:hover {
+    background: #b71c1c;       /* CHANGED: darker on hover */
+    transform: scale(1.1);     /* CHANGED: subtle grow on hover */
+}
+
+/* ============================================================
+   PAGINATION
+   ============================================================ */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0 40px;
+}
+
+.pagination-bar {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    background: #ffffff;
+    border: 1px solid #d7ccc8;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    padding: 8px 12px;
+}
+
+.page-status {
+    padding: 7px 14px;
+    background: #6d4c41;
+    color: white;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-right: 6px;
+}
+
+.page-btn {
+    padding: 7px 13px;
+    background: #efebe9;
+    color: #4e342e;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
     transition: background 0.2s;
 }
 
-.icon.edit {
-    color: #5d4037;
-}
+.page-btn:hover { background: #d7ccc8; }
 
-.icon.delete {
-    color: #c62828;
-}
-
-.icon:hover {
-    background: #d7ccc8;
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-start;
+.page-number {
+    display: inline-flex;
     align-items: center;
-    height: 100%; 
+    justify-content: center;
+    min-width: 34px;
+    padding: 7px 10px;
+    background: transparent;
+    color: #5d4037;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background 0.2s;
 }
 
-/* FORM GRID */
+.page-number:hover:not(.active) { background: #efebe9; }
+
+.page-number.active {
+    background: #8d6e63;
+    color: white;
+    font-weight: 700;
+}
+
+/* ============================================================
+   FORM GRID (add / edit pages)
+   ============================================================ */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 3fr;
@@ -164,132 +348,12 @@ h2 {
     padding: 10px;
     border: 1px solid #bcaaa4;
     border-radius: 6px;
+    font-family: inherit;
 }
 
-/* SEARCH BAR */
-.search-bar {
-    text-align: right;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.search-bar input {
-    padding: 10px;
-    width: 220px;
-    border-radius: 8px;
-    border: 1px solid #a1887f;
-}
-
-/* ADD BOOK LINK */
-.add-book-link {
-    text-align: right;
-    margin-bottom: 16px;
-}
-
-/* ============================
-   PAGINATION 
-============================ */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-top: 30px;
-    padding-bottom: 40px;
-}
-
-.page-btn, .page-number {
-    padding: 8px 16px;
-    background: #ffffff; /* Button-like container */
-    border: 1px solid #d7ccc8;
-    border-radius: 6px;
-    text-decoration: none;
-    color: #5d4037;
-    font-weight: 600;
-    transition: all 0.2s;
-}
-
-.page-status {
-    padding: 8px 16px;
-    background: #6d4c41;
-    color: white;
-    border-radius: 6px;
-    font-weight: 600;
-}
-
-.page-number.active {
-    background: #8d6e63;
-    color: white;
-    border-color: #8d6e63;
-}
-
-.page-btn:hover, .page-number:hover:not(.active) {
-    background: #efebe9;
-}
-
-.truncate {
-    max-width: 180px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    vertical-align: middle;
-    cursor: default;
-}
-
-.truncate-text {
-    display: inline-block;
-    max-width: 40ch; 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: bottom;
-}
-
-.styled-table td.truncate,
-.styled-table td .truncate {
-    display: inline-block;
-    max-width: 160px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-}
-
-/* ERROR BOX */
-.error-box {
-    background: #ffebee;
-    color: #c62828;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-/* ============================
-   HEADER ROW
-============================ */
-.header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.header-row h2 {
-    text-align: left;
-    margin: 0;
-    padding: 0;
-    font-size: 1.4rem;
-    color: #5d4037;
-}
-
-/* ============================
+/* ============================================================
    VIEW BOOK PAGE
-============================ */
+   ============================================================ */
 .view-book-grid {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -303,43 +367,51 @@ h2 {
     color: #5d4037;
 }
 
-.view-book-value {
-    color: #3e2723;
-}
+.view-book-value { color: #3e2723; }
 
 .view-book-synopsis {
     margin-top: 20px;
     text-align: left;
 }
 
-/* ============================
-   RESPONSIVE
-============================ */
-@media (max-width: 900px) {
-    .container {
-        width: 96%;
-    }
-
-    .view-book-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .truncate,
-    .styled-table td.truncate,
-    .styled-table td .truncate {
-        max-width: 120px;
-    }
+/* ============================================================
+   ERROR BOX
+   ============================================================ */
+.error-box {
+    background: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
 }
 
+/* ============================================================
+   RESPONSIVE — 900px
+   ============================================================ */
+@media (max-width: 900px) {
+    .container { width: 98%; }
+
+    .view-book-grid { grid-template-columns: 1fr; }
+
+    .col-id      { width: 6%; }
+    .col-title   { width: 27%; }
+    .col-author  { width: 17%; }
+    .col-date    { width: 12%; }
+    .col-genres  { width: 20%; }
+    .col-actions { width: 8%; }   /* CHANGED: slightly wider on medium screens */
+}
+
+/* ============================================================
+   RESPONSIVE — 600px
+   CHANGED: Date hidden, icon size reduced slightly for mobile
+   ============================================================ */
 @media (max-width: 600px) {
     .header-row {
         flex-direction: column;
-		align-items: stretch;
-	}
+        align-items: stretch;
+    }
 
     .search-bar {
-        width: 100%;
-        margin-bottom: 10px;
         flex-direction: column;
         align-items: stretch;
     }
@@ -349,25 +421,28 @@ h2 {
         box-sizing: border-box;
     }
 
-    .truncate,
-    .styled-table td.truncate,
-    .styled-table td .truncate {
-        max-width: 80px;
+    .col-date       { display: none; }
+    thead .col-date { display: none; }
+
+    .col-id      { width: 8%; }
+    .col-title   { width: 35%; }
+    .col-author  { width: 20%; }
+    .col-genres  { width: 22%; }
+    .col-actions { width: 10%; }  /* CHANGED: a touch wider on small screens */
+
+    /* CHANGED: slightly smaller icons on mobile so they fit the narrow column */
+    .icon {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
     }
 
-    .book-table {
-        min-width: 520px;
-    }
-
-    .pagination {
-        gap: 4px;
-        flex-wrap: wrap;
-    }
+    .pagination-bar { justify-content: center; }
 
     .page-btn,
     .page-number,
     .page-status {
         padding: 6px 10px;
-        font-size: 13px;
+        font-size: 0.82rem;
     }
 }
