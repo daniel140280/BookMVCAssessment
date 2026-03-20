@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>View Book</title>
-    <link rel="stylesheet" href="./stylesBooks.css">
+    <link rel="stylesheet" href="css/stylesBooks.css">
 </head>
 
 <body>
@@ -38,10 +38,10 @@
         <p>${book.synopsis}</p>
     </div>
 
-    <div style="margin-top: 25px;">
-        <a href="editBook?id=${book.id}" class="btn-primary">Edit</a>
+    <div class="form-actions">
+        <a href="editBook?id=${book.id}"   class="btn-primary">Edit</a>
         <a href="deleteBook?id=${book.id}" class="btn-danger">Delete</a>
-        <a href="books" class="btn-secondary">Back to Books</a>
+        <a href="books"                    class="btn-secondary">&#8592; Back to Books</a>
     </div>
 
 </div>

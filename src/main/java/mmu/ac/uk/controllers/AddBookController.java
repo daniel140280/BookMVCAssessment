@@ -39,6 +39,15 @@ public class AddBookController extends HttpServlet {
         Book b = new Book(title, author, date, genres, characters, synopsis);
 
         BookDAO dao = new BookDAO();
+        
+        try {
+            dao.validateBook(b, false);        
+        } catch (IllegalArgumentException e) {
+            req.setAttribute("error", e.getMessage());  
+            RequestDispatcher rd = req.getRequestDispatcher("addBook.jsp");
+            rd.include(req, resp);
+            return;                             
+        }
 
         try {
             dao.insertBook(b);
@@ -47,6 +56,7 @@ public class AddBookController extends HttpServlet {
             return;
         } catch (SQLException e) {
             req.setAttribute("error", e.getMessage());
+            req.setAttribute("book", b); 
             RequestDispatcher rd = req.getRequestDispatcher("addBook.jsp");
             rd.include(req, resp);
         }

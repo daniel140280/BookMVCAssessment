@@ -64,9 +64,11 @@
                             </span>
                         </td>
                         <!-- Action items, i.e. edit and delete -->
-                        <td class="col-actions actions">
-                            <a class="icon edit" href="editBook?id=${b.id}" title="Edit">&#x270F;&#xFE0F;</a>
-                            <a class="icon delete" href="deleteBook?id=${b.id}" title="Delete">&#x1F5D1;&#xFE0F;</a>
+                        <td class="col-actions">
+                            <div class="actions">
+                                <a class="icon edit"   href="editBook?id=${b.id}"   title="Edit">&#x270F;&#xFE0F;</a>
+                                <a class="icon delete" href="deleteBook?id=${b.id}" title="Delete">&#x1F5D1;&#xFE0F;</a>
+                            </div>
                         </td>
                     </tr>
                 </c:forEach>

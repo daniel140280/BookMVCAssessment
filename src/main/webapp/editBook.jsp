@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Edit Book</title>
-    <link rel="stylesheet" href="./stylesBooks.css">
+    <link rel="stylesheet" href="css/stylesBooks.css">
 </head>
 
 <body>
@@ -18,6 +18,8 @@
     <c:if test="${not empty error}">
         <div class="error-box">${error}</div>
     </c:if>
+    
+    <h2><strong>Editing: ${book.title}</strong></h2>
 
     <form action="editBook" method="post">
 
@@ -25,25 +27,42 @@
 
         <div class="form-grid">
             <label>Title:</label>
-            <input type="text" name="title" value="${book.title}" required>
+            <input type="text" id="title" name="title"
+                   value="${book.title}"
+                   maxlength="255" required>
 
-            <label>Author:</label>
-            <input type="text" name="author" value="${book.author}" required>
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author"
+                   value="${book.author}"
+                   maxlength="255" required>
 
-            <label>Date (DD/MM/YYYY):</label>
-            <input type="text" name="date" value="${book.date}" required>
+            <label for="date">Date (DD/MM/YYYY):</label>
+            <input type="text" id="date" name="date"
+                   value="${book.date}"
+                   pattern="\d{2}/\d{2}/\d{4}"
+                   required
+                   title="Date must be in DD/MM/YYYY format">
 
-            <label>Genres:</label>
-            <input type="text" name="genres" value="${book.genres}" required>
+            <span></span>
+            <p class="field-hint date-warning">&#9888; Format must be: DD/MM/YYYY &mdash; e.g. 15/06/1997</p>
 
-            <label>Characters:</label>
-            <input type="text" name="characters" value="${book.characters}" required>
+            <label for="genres">Genres:</label>
+            <input type="text" id="genres" name="genres"
+                   value="${book.genres}"
+                   maxlength="255" required>
 
-            <label>Synopsis:</label>
-            <textarea name="synopsis" rows="5" required>${book.synopsis}</textarea>
+            <label for="characters">Characters:</label>
+            <input type="text" id="characters" name="characters"
+                   value="${book.characters}"
+                   required>
+
+            <label for="synopsis">Synopsis:</label>
+            <textarea id="synopsis" name="synopsis"
+                      rows="5" required>${book.synopsis}</textarea>
+                      
         </div>
 
-        <div style="margin-top: 20px;">
+        <div class="form-actions">
             <button class="btn-primary" type="submit">Save Changes</button>
             <a href="books" class="btn-secondary">Cancel</a>
         </div>

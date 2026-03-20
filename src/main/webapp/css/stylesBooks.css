@@ -3,7 +3,6 @@
    ============================================================ */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* background-image: url('../bookshelf-bg.jpg'); */
     background: linear-gradient(145deg, #f4f1ea 0%, #e8e0d5 50%, #ede0d0 100%);
     background-attachment: fixed;
     margin: 0;
@@ -56,41 +55,39 @@ h2 {
 
 /* ============================================================
    BUTTONS
+   All variants share base properties.
+   line-height:1 is the key fix — without it <a> tags inherit
+   the body line-height (~1.5) and render taller than <button>
+   elements even with identical padding and font-size.
+   display:inline-flex + align-items:center vertically centres
+   text the same way in both <a> and <button> elements.
    ============================================================ */
-.btn-primary {
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+.btn-success {
     padding: 10px 20px;
-    background: #6d4c41;
-    color: white;
-    border-radius: 8px;
-    text-decoration: none;
+    font-size: 0.95rem;
     font-weight: 600;
-    display: inline-block;
+    line-height: 1;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
-}
-
-.btn-primary:hover { background: #5d4037; }
-
-.btn-secondary {
-    padding: 10px 18px;
-    background: #bcaaa4;
-    color: #3e2723;
-    border-radius: 8px;
     text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
 }
 
+.btn-primary   { background: #6d4c41; color: white; }
+.btn-secondary { background: #bcaaa4; color: #3e2723; }
+.btn-danger    { background: #c62828; color: white; }
+.btn-success   { background: #2e7d32; color: white; }
+
+.btn-primary:hover   { background: #5d4037; }
 .btn-secondary:hover { background: #a1887f; }
-
-.btn-danger {
-    padding: 10px 18px;
-    background: #c62828;
-    color: white;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-}
-
-.btn-danger:hover { background: #b71c1c; }
+.btn-danger:hover    { background: #b71c1c; }
+.btn-success:hover   { background: #1b5e20; }
 
 /* ============================================================
    ADD BOOK LINK
@@ -149,9 +146,8 @@ h2 {
     overflow: hidden;
 }
 
-/* CHANGED: actions header centred to match icon alignment below */
 .styled-table thead th.col-actions {
-  	text-align: center; 
+    text-align: center;
 }
 
 .styled-table thead th:last-child {
@@ -168,11 +164,15 @@ h2 {
     white-space: nowrap;
 }
 
+/* FIX: col-actions td must not clip its flex child.
+   overflow:visible + explicit height let the inner .actions
+   div flex-centre the icons without being cropped.          */
 .styled-table tbody td.col-actions {
     overflow: visible;
     text-overflow: unset;
     white-space: nowrap;
-    padding: 6px 8px;
+    padding: 0;           /* padding is handled by .actions instead */
+    height: 44px;         /* gives the flex child a reliable height  */
 }
 
 .styled-table tbody tr:nth-child(even) { background: #faf8f5; }
@@ -180,15 +180,12 @@ h2 {
 
 /* ============================================================
    COLUMN WIDTHS
-   CHANGED: col-actions reduced from 11% to 7% — just wide
-   enough for two icons. Freed space redistributed to title,
-   author and genres for more readable text.
    ============================================================ */
 .col-id      { width: 5%;  text-align: left; }
 .col-title   { width: 26%; }
 .col-author  { width: 19%; }
 .col-date    { width: 12%; white-space: nowrap; }
-.col-genres  { width: 20%; }  
+.col-genres  { width: 20%; }
 .col-actions { width: 9%;  text-align: center; box-sizing: border-box; }
 
 /* ============================================================
@@ -214,18 +211,17 @@ a.cell-text:hover { text-decoration: underline; }
 
 /* ============================================================
    ACTION ICONS
-   CHANGED: icons larger, centred in column, with stronger
-   colour backgrounds so edit is clearly visible alongside delete.
-   justify-content changed to center to match centred column header.
+   FIX: .actions is now ALWAYS a <div> inside the <td>, so
+   display:flex works reliably — it is no longer applied
+   directly to the <td> (which varies per browser).
    ============================================================ */
 .actions {
-	display: flex;
+    display: flex;
     align-items: center;
-    justify-content: center;  
-    gap: 4px;                  
-    white-space: nowrap;
-    overflow: visible;
-    max-width: 100%;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    height: 100%;           /* fills the td height set above  */
     box-sizing: border-box;
 }
 
@@ -240,30 +236,27 @@ a.cell-text:hover { text-decoration: underline; }
     align-items: center;
     justify-content: center;
     transition: background 0.2s, transform 0.1s;
-    flex-shrink: 0; 
+    flex-shrink: 0;
 }
 
-/* CHANGED: edit icon now has a warm tinted background so it's
-   clearly visible and distinct from delete */
 .icon.edit {
     color: #ffffff;
-    background: #8d6e63;       /* CHANGED: was plain #efebe9, now filled brown */
+    background: #8d6e63;
 }
 
 .icon.edit:hover {
-    background: #6d4c41;       /* CHANGED: darker on hover */
-    transform: scale(1.1);     /* CHANGED: subtle grow on hover */
+    background: #6d4c41;
+    transform: scale(1.1);
 }
 
-/* CHANGED: delete icon has a red filled background to match danger */
 .icon.delete {
     color: #ffffff;
-    background: #c62828;       /* CHANGED: was plain #efebe9, now filled red */
+    background: #c62828;
 }
 
 .icon.delete:hover {
-    background: #b71c1c;       /* CHANGED: darker on hover */
-    transform: scale(1.1);     /* CHANGED: subtle grow on hover */
+    background: #b71c1c;
+    transform: scale(1.1);
 }
 
 /* ============================================================
@@ -343,35 +336,84 @@ a.cell-text:hover { text-decoration: underline; }
     text-align: left;
 }
 
+.form-grid label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #5d4037;
+    align-self: center;
+}
+
 .form-grid input,
 .form-grid textarea {
     padding: 10px;
     border: 1px solid #bcaaa4;
     border-radius: 6px;
     font-family: inherit;
+    font-size: 0.95rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Highlights a field that has failed HTML5 validation */
+.form-grid input:invalid:not(:placeholder-shown),
+.form-grid textarea:invalid:not(:placeholder-shown) {
+    border-color: #c62828;
+    background: #fff8f8;
+}
+
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 /* ============================================================
    VIEW BOOK PAGE
    ============================================================ */
+
+/* auto first column: label takes its natural width so values
+   sit close beside them rather than far across the card.
+   max-width keeps the grid from sprawling on wide screens.   */
 .view-book-grid {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 18px;
+    grid-template-columns: auto 1fr;
+    gap: 10px 20px;
     margin-top: 20px;
+    max-width: 500px;
     text-align: left;
 }
 
 .view-book-label {
-    font-weight: bold;
+    font-weight: 700;
+    font-size: 0.95rem;
     color: #5d4037;
 }
 
-.view-book-value { color: #3e2723; }
+.view-book-value {
+    font-size: 0.95rem;
+    color: #3e2723;
+}
 
 .view-book-synopsis {
     margin-top: 20px;
     text-align: left;
+}
+
+/* synopsis "Synopsis:" heading matches view-book-label exactly */
+.view-book-synopsis h3 {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #5d4037;
+    margin: 0 0 6px 0;
+}
+
+/* synopsis body text matches view-book-value */
+.view-book-synopsis p {
+    font-size: 0.95rem;
+    color: #3e2723;
+    line-height: 1.6;
+    margin: 0;
 }
 
 /* ============================================================
@@ -383,27 +425,56 @@ a.cell-text:hover { text-decoration: underline; }
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 15px;
+    text-align: left;
 }
+
+/* ============================================================
+   FIELD HINT  (shown below date input)
+   ============================================================ */
+/* .field-hint is placed on a <p> tag — browsers give <p> a
+   default top/bottom margin, so we must reset it explicitly  */
+.field-hint {
+    font-size: 0.82rem;
+    color: #795548;
+    margin: 0;
+    padding: 0;
+    align-self: center;
+}
+
+/* date hint on edit/add pages — italic red with warning icon */
+.field-hint.date-warning {
+    color: #c62828;
+    font-style: italic;
+    font-weight: 500;
+}
+
+/* ============================================================
+   CARD MODIFIERS
+   ============================================================ */
+
+/* green left border — used on add book page (positive action) */
+.card.success { border-left-color: #2e7d32; }
 
 /* ============================================================
    RESPONSIVE — 900px
    ============================================================ */
 @media (max-width: 900px) {
     .container { width: 98%; }
-
-    .view-book-grid { grid-template-columns: 1fr; }
+    .view-book-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
 
     .col-id      { width: 6%; }
     .col-title   { width: 27%; }
     .col-author  { width: 17%; }
     .col-date    { width: 12%; }
     .col-genres  { width: 20%; }
-    .col-actions { width: 8%; }   /* CHANGED: slightly wider on medium screens */
+    .col-actions { width: 8%; }
 }
 
 /* ============================================================
    RESPONSIVE — 600px
-   CHANGED: Date hidden, icon size reduced slightly for mobile
    ============================================================ */
 @media (max-width: 600px) {
     .header-row {
@@ -421,19 +492,18 @@ a.cell-text:hover { text-decoration: underline; }
         box-sizing: border-box;
     }
 
-    .col-date       { display: none; }
+    .col-date,
     thead .col-date { display: none; }
 
     .col-id      { width: 8%; }
     .col-title   { width: 35%; }
     .col-author  { width: 20%; }
     .col-genres  { width: 22%; }
-    .col-actions { width: 10%; }  /* CHANGED: a touch wider on small screens */
+    .col-actions { width: 10%; }
 
-    /* CHANGED: slightly smaller icons on mobile so they fit the narrow column */
     .icon {
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         font-size: 1rem;
     }
 
@@ -444,5 +514,9 @@ a.cell-text:hover { text-decoration: underline; }
     .page-status {
         padding: 6px 10px;
         font-size: 0.82rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
     }
 }

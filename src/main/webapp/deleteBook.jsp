@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Delete Book</title>
-    <link rel="stylesheet" href="./stylesBooks.css">
+    <link rel="stylesheet" href="css/stylesBooks.css">
 </head>
 
 <body>
@@ -22,8 +22,10 @@
     <form action="deleteBook" method="post">
         <input type="hidden" name="id" value="${book.id}">
 
-        <button class="btn-danger" type="submit">Delete</button>
-        <a href="books" class="btn-secondary">Cancel</a>
+        <div class="form-actions">
+            <button class="btn-danger" type="submit">Delete</button>
+            <a href="books" class="btn-secondary">Cancel</a>
+        </div>
     </form>
 
 </div>

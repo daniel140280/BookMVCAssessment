@@ -46,6 +46,16 @@ public class EditBookController extends HttpServlet {
 	        Book b = new Book(id, title, author, date, genres, characters, synopsis);
 
 	        BookDAO dao = new BookDAO();
+	        
+	        try {
+	            dao.validateBook(b, true);         
+	        } catch (IllegalArgumentException e) {
+	            req.setAttribute("error", e.getMessage());  
+	            req.setAttribute("book", b);       
+	            RequestDispatcher rd = req.getRequestDispatcher("editBook.jsp");
+	            rd.include(req, resp);
+	            return;
+	        }
 
 	        try {
 	            dao.updateBook(b);

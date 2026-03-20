@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Add Book</title>
-    <link rel="stylesheet" href="./stylesBooks.css">
+    <link rel="stylesheet" href="css/stylesBooks.css">
 </head>
 
 <body>
@@ -13,7 +13,7 @@
 
 <h1>Add New Book</h1>
 
-<div class="card">
+<div class="card success">
 
     <c:if test="${not empty error}">
         <div class="error-box">${error}</div>
@@ -23,28 +23,49 @@
 
         <div class="form-grid">
 
-            <label>Title:</label>
-            <input type="text" name="title" required>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title"
+                   maxlength="255" required
+                   placeholder="Enter book title"
+                   value="${book.title}">
 
-            <label>Author:</label>
-            <input type="text" name="author" required>
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author"
+                   maxlength="255" required
+                   placeholder="Enter author name"
+                   value="${book.author}">
 
-            <label>Date (DD/MM/YYYY):</label>
-            <input type="text" name="date" required>
+            <label for="date">Date (DD/MM/YYYY):</label>
+            <input type="text" id="date" name="date"
+                   pattern="\d{2}/\d{2}/\d{4}"
+                   required
+                   placeholder="DD/MM/YYYY"
+                   title="Date must be in DD/MM/YYYY format"
+                   value="${book.date}">
+            <span></span>
+            <p class="field-hint date-warning">&#9888; Format must be: DD/MM/YYYY &mdash; e.g. 15/06/1997</p>
 
-            <label>Genres:</label>
-            <input type="text" name="genres" required>
+            <label for="genres">Genres:</label>
+            <input type="text" id="genres" name="genres"
+                   maxlength="255" required
+                   placeholder="e.g. Fiction, Mystery"
+                   value="${book.genres}">
 
-            <label>Characters:</label>
-            <input type="text" name="characters" required>
+            <label for="characters">Characters:</label>
+            <input type="text" id="characters" name="characters"
+                   required
+                   placeholder="Main characters"
+                   value="${book.characters}">
 
-            <label>Synopsis:</label>
-            <textarea name="synopsis" rows="5" required></textarea>
+            <label for="synopsis">Synopsis:</label>
+            <textarea id="synopsis" name="synopsis"
+                      rows="5" required
+                      placeholder="Brief synopsis of the book...">${book.synopsis}</textarea>
 
         </div>
 
-        <div style="margin-top: 20px;">
-            <button class="btn-primary" type="submit">Add Book</button>
+        <div class="form-actions">
+            <button class="btn-success" type="submit">Add Book</button>
             <a href="books" class="btn-secondary">Cancel</a>
         </div>
 
