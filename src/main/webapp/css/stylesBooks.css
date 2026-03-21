@@ -32,7 +32,8 @@ h1 {
 h2 {
     color: #5d4037;
     font-size: 1.4rem;
-    margin: 0;
+    font-weight: 700;
+    margin: 0 0 16px 0;
     padding: 0;
 }
 
@@ -49,48 +50,65 @@ h2 {
     text-align: left;
 }
 
-.card.warning {
-    border-left-color: #c62828;
-}
+/* red border — delete confirmation page */
+.card.warning { border-left-color: #c62828; }
+
+/* green border — add book page */
+.card.success { border-left-color: #2e7d32; }
 
 /* ============================================================
    BUTTONS
-   All variants share base properties.
-   line-height:1 is the key fix — without it <a> tags inherit
-   the body line-height (~1.5) and render taller than <button>
-   elements even with identical padding and font-size.
-   display:inline-flex + align-items:center vertically centres
-   text the same way in both <a> and <button> elements.
+   All four variants share one base rule so <a> and <button>
+   elements render at exactly the same size.
+
+   Why this matters:
+   - <button> has browser default styles (appearance, font)
+     that must be explicitly reset.
+   - <a> inherits body line-height (~1.5) which adds invisible
+     vertical space inside the element, making it taller than
+     a <button> with identical padding.
+   - display:inline-flex + align-items:center + line-height:1
+     + vertical-align:middle forces both element types to size
+     purely from their padding, making them pixel-identical.
    ============================================================ */
 .btn-primary,
 .btn-secondary,
 .btn-danger,
 .btn-success {
+    /* reset browser <button> defaults */
+    -webkit-appearance: none;
+    appearance: none;
+    font-family: inherit;
+    /* shared sizing — identical for every variant */
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    line-height: 1;
     padding: 10px 20px;
     font-size: 0.95rem;
     font-weight: 600;
-    line-height: 1;
     border-radius: 8px;
     border: none;
     cursor: pointer;
     text-decoration: none;
-    display: inline-flex;
-    align-items: center;
     box-sizing: border-box;
+    white-space: nowrap;
 }
 
-.btn-primary   { background: #6d4c41; color: white; }
+/* colours */
+.btn-primary   { background: #6d4c41; color: #ffffff; }
 .btn-secondary { background: #bcaaa4; color: #3e2723; }
-.btn-danger    { background: #c62828; color: white; }
-.btn-success   { background: #2e7d32; color: white; }
+.btn-danger    { background: #c62828; color: #ffffff; }
+.btn-success   { background: #2e7d32; color: #ffffff; }
 
-.btn-primary:hover   { background: #5d4037; }
-.btn-secondary:hover { background: #a1887f; }
-.btn-danger:hover    { background: #b71c1c; }
-.btn-success:hover   { background: #1b5e20; }
+/* hover colours */
+.btn-primary:hover   { background: #5d4037; color: #ffffff; }
+.btn-secondary:hover { background: #a1887f; color: #3e2723; }
+.btn-danger:hover    { background: #b71c1c; color: #ffffff; }
+.btn-success:hover   { background: #1b5e20; color: #ffffff; }
 
 /* ============================================================
-   ADD BOOK LINK
+   ADD BOOK LINK  (top-right of main listing page)
    ============================================================ */
 .add-book-link {
     text-align: right;
@@ -98,7 +116,7 @@ h2 {
 }
 
 /* ============================================================
-   HEADER ROW
+   HEADER ROW  (h2 + search bar side by side)
    ============================================================ */
 .header-row {
     display: flex;
@@ -146,13 +164,8 @@ h2 {
     overflow: hidden;
 }
 
-.styled-table thead th.col-actions {
-    text-align: center;
-}
-
-.styled-table thead th:last-child {
-    border-right: none;
-}
+.styled-table thead th.col-actions { text-align: center; }
+.styled-table thead th:last-child   { border-right: none; }
 
 .styled-table tbody td {
     padding: 10px;
@@ -164,15 +177,14 @@ h2 {
     white-space: nowrap;
 }
 
-/* FIX: col-actions td must not clip its flex child.
-   overflow:visible + explicit height let the inner .actions
-   div flex-centre the icons without being cropped.          */
+/* actions cell: overflow must be visible so the flex div
+   inside can centre icons without being clipped            */
 .styled-table tbody td.col-actions {
     overflow: visible;
     text-overflow: unset;
     white-space: nowrap;
-    padding: 0;           /* padding is handled by .actions instead */
-    height: 44px;         /* gives the flex child a reliable height  */
+    padding: 0;
+    height: 44px;
 }
 
 .styled-table tbody tr:nth-child(even) { background: #faf8f5; }
@@ -210,10 +222,9 @@ a.cell-text {
 a.cell-text:hover { text-decoration: underline; }
 
 /* ============================================================
-   ACTION ICONS
-   FIX: .actions is now ALWAYS a <div> inside the <td>, so
-   display:flex works reliably — it is no longer applied
-   directly to the <td> (which varies per browser).
+   ACTION ICONS  (edit / delete inside the table)
+   The .actions <div> is the flex container; the <td> itself
+   is not, because display:flex on a <td> is unreliable.
    ============================================================ */
 .actions {
     display: flex;
@@ -221,7 +232,7 @@ a.cell-text:hover { text-decoration: underline; }
     justify-content: center;
     gap: 6px;
     width: 100%;
-    height: 100%;           /* fills the td height set above  */
+    height: 100%;
     box-sizing: border-box;
 }
 
@@ -239,25 +250,11 @@ a.cell-text:hover { text-decoration: underline; }
     flex-shrink: 0;
 }
 
-.icon.edit {
-    color: #ffffff;
-    background: #8d6e63;
-}
+.icon.edit   { color: #ffffff; background: #8d6e63; }
+.icon.delete { color: #ffffff; background: #c62828; }
 
-.icon.edit:hover {
-    background: #6d4c41;
-    transform: scale(1.1);
-}
-
-.icon.delete {
-    color: #ffffff;
-    background: #c62828;
-}
-
-.icon.delete:hover {
-    background: #b71c1c;
-    transform: scale(1.1);
-}
+.icon.edit:hover   { background: #6d4c41; transform: scale(1.1); }
+.icon.delete:hover { background: #b71c1c; transform: scale(1.1); }
 
 /* ============================================================
    PAGINATION
@@ -327,18 +324,21 @@ a.cell-text:hover { text-decoration: underline; }
 }
 
 /* ============================================================
-   FORM GRID (add / edit pages)
+   FORM GRID  (add / edit pages)
    ============================================================ */
 .form-grid {
     display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 12px;
+    grid-template-columns: 180px 1fr;
+    gap: 14px 12px;
     text-align: left;
+    align-items: center;
 }
 
+/* Labels: same weight, size and colour as view-book-label
+   so they look prominent and consistent across all pages   */
 .form-grid label {
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: #5d4037;
     align-self: center;
 }
@@ -354,13 +354,14 @@ a.cell-text:hover { text-decoration: underline; }
     box-sizing: border-box;
 }
 
-/* Highlights a field that has failed HTML5 validation */
+/* Red border on invalid fields after the user has typed */
 .form-grid input:invalid:not(:placeholder-shown),
 .form-grid textarea:invalid:not(:placeholder-shown) {
     border-color: #c62828;
     background: #fff8f8;
 }
 
+/* Row of buttons below the form */
 .form-actions {
     margin-top: 20px;
     display: flex;
@@ -369,51 +370,22 @@ a.cell-text:hover { text-decoration: underline; }
 }
 
 /* ============================================================
-   VIEW BOOK PAGE
+   FIELD HINT  (date format reminder below date input)
+   On a <p> element — must reset browser default p margins.
    ============================================================ */
-
-/* auto first column: label takes its natural width so values
-   sit close beside them rather than far across the card.
-   max-width keeps the grid from sprawling on wide screens.   */
-.view-book-grid {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px 20px;
-    margin-top: 20px;
-    max-width: 500px;
-    text-align: left;
-}
-
-.view-book-label {
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: #5d4037;
-}
-
-.view-book-value {
-    font-size: 0.95rem;
-    color: #3e2723;
-}
-
-.view-book-synopsis {
-    margin-top: 20px;
-    text-align: left;
-}
-
-/* synopsis "Synopsis:" heading matches view-book-label exactly */
-.view-book-synopsis h3 {
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: #5d4037;
-    margin: 0 0 6px 0;
-}
-
-/* synopsis body text matches view-book-value */
-.view-book-synopsis p {
-    font-size: 0.95rem;
-    color: #3e2723;
-    line-height: 1.6;
+.field-hint {
+    font-size: 0.85rem;
+    color: #795548;
     margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+/* Warning variant: red italic, used for date format reminder */
+.field-hint.date-warning {
+    color: #c62828;
+    font-style: italic;
+    font-weight: 600;
 }
 
 /* ============================================================
@@ -429,40 +401,77 @@ a.cell-text:hover { text-decoration: underline; }
 }
 
 /* ============================================================
-   FIELD HINT  (shown below date input)
+   VIEW BOOK PAGE
    ============================================================ */
-/* .field-hint is placed on a <p> tag — browsers give <p> a
-   default top/bottom margin, so we must reset it explicitly  */
-.field-hint {
-    font-size: 0.82rem;
-    color: #795548;
-    margin: 0;
+
+/* auto first column: label column is only as wide as it needs
+   to be, so values start immediately next to their label.
+   max-width stops the grid spanning the full card width.    */
+.view-book-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 14px 12px;
+    margin-top: 16px;
+    text-align: left;
+    align-items: center;
+}
+
+/* Label style: prominent, matches form-grid label */
+.view-book-label {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #5d4037;
+    white-space: nowrap;
+}
+
+/* Value style: slightly lighter */
+.view-book-value {
+    font-size: 0.95rem;
+    color: #3e2723;
+    background: #f5f0ed;
+    border: 1px solid #bcaaa4;
+    border-radius: 6px;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.view-book-synopsis {
+    margin-top: 20px;
+    text-align: left;
+}
+
+/* "Synopsis" heading: identical to .view-book-label */
+.view-book-synopsis h3 {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #5d4037;
+    margin: 0 0 8px 0;
     padding: 0;
-    align-self: center;
 }
 
-/* date hint on edit/add pages — italic red with warning icon */
-.field-hint.date-warning {
-    color: #c62828;
-    font-style: italic;
-    font-weight: 500;
+/* Synopsis body: identical to .view-book-value */
+.view-book-synopsis p {
+    font-size: 0.95rem;
+    color: #3e2723;
+    line-height: 1.6;
+    margin: 0;
+    padding: 10px;
+    background: #f5f0ed;
+    border: 1px solid #bcaaa4;
+    border-radius: 6px;
+    box-sizing: border-box;
+    width: 100%;
 }
-
-/* ============================================================
-   CARD MODIFIERS
-   ============================================================ */
-
-/* green left border — used on add book page (positive action) */
-.card.success { border-left-color: #2e7d32; }
 
 /* ============================================================
    RESPONSIVE — 900px
    ============================================================ */
 @media (max-width: 900px) {
     .container { width: 98%; }
+
     .view-book-grid {
         grid-template-columns: 1fr;
-        max-width: 100%;
     }
 
     .col-id      { width: 6%; }
@@ -516,6 +525,7 @@ a.cell-text:hover { text-decoration: underline; }
         font-size: 0.82rem;
     }
 
+    /* stack label above input on small screens */
     .form-grid {
         grid-template-columns: 1fr;
     }
